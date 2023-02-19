@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Test</title>
+    <style>
+      #video-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, 600px);
+        grid-auto-rows: 400px;
+      }
+      video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    </style>
+    <script src="https://unpkg.com/peerjs@1.4.7/dist/peerjs.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      const socket = io();
+    </script>
+    <script type="module" src="./client.js"></script>
+  </head>
+  <body>
+    <div id="video-grid">
+      <video></video>
+    </div>
+    <script>
+      const constraints = {
+        audio: false,
+        video: true,
+      };
+
+      navigator.mediaDevices
+        .getUserMedia(constraints)
+        .then((mediaStream) => {
+          const video = document.querySelector("video");
+          video.srcObject = mediaStream;
+          video.onloadedmetadata = () => {
+            video.play();
+          };
+        })
+        .catch((err) => {
+          // always check for errors at the end.
+          console.error(`${err.name}: ${err.message}`);
+        });
+    </script>
+  </body>
+</html>
